@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { user, userDocument } from './schemas/user.schema';
@@ -18,9 +18,7 @@ export class UserService {
     let email = createUserDto.email;
     let checkEmail = await this.userModel.findOne({ email });
     if (checkEmail) {
-      return {
-        message: 'Email đã tồn tại',
-      };
+      throw new BadRequestException('Email already exists');
     }
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
@@ -62,8 +60,15 @@ export class UserService {
     };
   }
 
-  findAllWithout() {
-    return this.userModel.find({}).select('-password').exec();
+  async findAllWithout() {
+    const result = await this.userModel
+      .find({})
+      .select('-password')
+      .sort('desc')
+      .exec();
+    return {
+      result,
+    };
   }
 
   findOne(id: string) {

@@ -18,6 +18,14 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // Báo lỗi nếu có thuộc tính không được định nghĩa
     }),
   );
+
+  //  config cors
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    credentials: true,
+  });
   // config Version
   app.setGlobalPrefix('api');
   app.enableVersioning({
