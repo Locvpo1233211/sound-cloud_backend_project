@@ -6,12 +6,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import aqp from 'api-query-params';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(user.name)
-    private userModel: Model<user>,
+    private readonly userModel: SoftDeleteModel<userDocument>,
     private configService: ConfigService,
   ) {}
   async create(createUserDto: CreateUserDto) {
@@ -95,6 +96,6 @@ export class UserService {
         message: 'Id không hợp lệ',
       };
     }
-    return this.userModel.deleteOne({ _id: id });
+    return this.userModel.softDelete({ _id: id });
   }
 }
