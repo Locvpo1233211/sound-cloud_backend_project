@@ -46,7 +46,7 @@ export class UserService {
       .skip(offset)
       .select('-password')
       .limit(defaultLimit)
-      .sort(sort as any)
+      .sort({ _id: -1 })
       .populate(population)
       .select(projection)
       .exec();
